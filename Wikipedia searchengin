@@ -1,0 +1,99 @@
+import wikipedia as wiki
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
+from tkinter import filedialog
+root = tk.Tk()
+root.geometry("500x500")
+root.title("Wikipedia")
+class clear:
+    def clrscr(self,search,text):
+        search.delete("0",tk.END)
+        text.delete("0",tk.END)
+class search:
+    def search_key(self,search_bar,search_Var,text_box):
+        
+        try:
+            text_box.delete("0.0",tk.END)
+        except:
+            pass
+        st=search_Var.get()
+        try:
+            temp = wiki.page(st)
+            text_box.insert("0.0",temp.content)
+        except wiki.exceptions.DisambiguationError:
+            messagebox.showinfo(title="Search error", message="Please be specific about search key\n eg if you are searching about city add city at the end")
+        
+class save:
+    def save_button(self,text_box,search_key):
+        paths =  filedialog.askdirectory()
+        print(paths + r"/ ".replace(" ","")+ search_key.get() + ".txt")
+        with open(paths + search_key.get() + ".txt","w",encoding="utf-8") as fp:
+            fp.write(text_box.get("1.0",tk.END))
+            fp.close()
+class first:
+    def labels(self):
+        global ser
+        sa = save()
+        search_frame = ttk.LabelFrame(root)
+        #search_frame.pack(side = "top",fill = "both")
+        search_frame.pack(side="top", fill = "both")
+        
+        search_var = tk.StringVar()
+        search_bar = tk.Entry(search_frame,width = 80,textvariable = search_var)
+        search_bar.focus_set()
+        #search_bar.grid(row = 0,column = 0,sticky = "news")
+        search_bar.pack(side = "top",fill = "both")
+        
+        search_button = ttk.Button(search_frame,text = "Search",command = lambda:ser.search_key(search_bar,search_var,text_box))
+        search_button.pack(side="left")
+        
+        save_button = ttk.Button(search_frame,text = "Save",command = lambda :sa.save_button(text_box,search_var))
+        save_button.pack(side = "left")
+        
+        find_button = ttk.Button(search_frame,text = "Find")
+        find_button.pack(side = "left")
+        
+        text_label = ttk.Label(root)
+        text_label.pack(side = "top",fill = "both")
+        
+        y_scroll = tk.Scrollbar(root)
+        y_scroll.pack(side = "right",fill = "y")
+        
+        text_box = tk.Text(root,yscrollcommand = y_scroll.set)
+        text_box.config(wrap="word",relief=tk.FLAT)
+        text_box.pack(side="top",fill = "both",expand =True)
+        
+        y_scroll.config(command = text_box.yview)
+        
+sa = save()
+boot = first()
+boot.labels()
+ser=search()
+root.mainloop()
+'''
+import tkinter as tk
+from tkinter import ttk
+
+root = tk.Tk()
+root.geometry("500x500")
+root.title("Wikipedia")
+
+
+class first:
+    def labels(self):
+        search_frame = ttk.LabelFrame(root)
+        search_frame.pack(side="top", fill="both", expand=True)
+
+
+        search_var = tk.StringVar()
+        search_bar = tk.Entry(search_frame, width=20, textvariable=search_var)
+        search_bar.pack(fill="x", expand=True)
+
+        search_button = ttk.Button(search_frame, text="Search")
+        search_button.pack(fill="both")
+
+
+boot = first()
+boot.labels()
+root.mainloop()'''
